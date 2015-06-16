@@ -1,0 +1,72 @@
+<h1>Board: <%=@board.title %></h1>
+<h1>
+  backlog
+</h1>
+<% @tickets.select { |t| t.status == "backlog" }.each do |t| %>
+  <div>
+    <h3>
+      <%= t.title %>
+    </h3>
+    <p>
+      Desc: <%= t.desc %>
+    </p>
+    <p>status: <%= t.status %></p>
+    <%= button_to "current sprint", t, method: :put, params: { board_id: @board.id, new_status: 1 } %>
+  </div>
+<% end %>
+<h1>
+  current sprint
+</h1>
+<% @tickets.select { |t| t.status == "current sprint" }.each do |t| %>
+  <div>
+    <h3>
+      <%= t.title %>
+    </h3>
+    <p>
+      Desc: <%= t.desc %>
+    </p>
+    <p>status: <%= t.status %></p>
+    <%= button_to "backlog", t, method: :put, params: { board_id: @board.id, new_status: 0 } %>
+    <%= button_to "in progress", t, method: :put, params: { board_id: @board.id, new_status: 2 } %>
+  </div>
+<% end %>
+<h1>
+  in progress
+</h1>
+<% @tickets.select { |t| t.status == "in progress" }.each do |t| %>
+  <div>
+    <h3>
+      <%= t.title %>
+    </h3>
+    <p>
+      Desc: <%= t.desc %>
+    </p>
+    <p>status: <%= t.status %></p>
+  </div>
+    <%= button_to "current_sprint", t, method: :put, params: { board_id: @board.id, new_status: 1 } %>
+    <%= button_to "done", t, method: :put, params: { board_id: @board.id, new_status: 3 } %>
+<% end %>
+<h1>
+  done
+</h1>
+<% @tickets.select { |t| t.status == "done" }.each do |t| %>
+  <div>
+    <h3>
+      <%= t.title %>
+    </h3>
+    <p>
+      Desc: <%= t.desc %>
+    </p>
+    <p>status: <%= t.status %></p>
+  </div>
+    <%= button_to "in progress", t, method: :put, params: { board_id: @board.id, new_status: 2 } %>
+<% end %>
+
+<h1>Create new ticket</h1>
+<%= form_for @ticket do |f| %>
+  <%= f.text_field :title %>
+  <%= f.text_field :desc %>
+  <%= f.hidden_field :board_id, value: @board.id %>
+  <%= f.select :status, [['backlog',0],['current sprint',1],['in progress',2],['done',3]] %>
+  <%= f.submit "Submit" %>
+<% end %>
